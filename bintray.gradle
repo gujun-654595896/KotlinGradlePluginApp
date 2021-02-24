@@ -1,0 +1,106 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+//这个是Jcenter上创建的仓库名，保证必须先创建
+def repositoryName = PROJ_REPOSITORY
+//这个是仓库中的package名，根据你的包自己定义
+def projectName = PROJ_NAME
+//package对应的描述
+def projectDesc = PROJ_DESCRIPTION
+
+//库的名
+def projectArtifactId = PROJ_ARTIFACTID
+
+//下面是项目开源地址，这个随便写也没问题，最好写正确
+def siteUrl = PROJ_WEBSITEURL
+def gitUrl = PROJ_VCSURL
+def issueUrl = PROJ_ISSUETRACKERURL
+
+//这个随便写作者名
+def username = DEVELOPER_NAME
+
+def licenseIds = ['Apache-2.0']
+def licenseNames = ['The Apache Software License, Version 2.0']
+def licenseUrls = ['http://www.apache.org/licenses/LICENSE-2.0.txt']
+def inception = '2016'
+
+install {
+    repositories {
+        mavenInstaller {
+            pom.project {
+                // Description
+                name projectName
+                description projectDesc
+                url siteUrl
+
+                // Archive,在库项目中的build.gradle文件中配置
+                // implementation 'com.gujun.plugin:GradlePlugin-lib:1.0.2'
+                // implementation '<groupId>:<artifactId>:<version>'
+                groupId project.group
+                artifactId projectArtifactId
+                version project.version
+
+                // License
+                inceptionYear inception
+                licenses {
+                    licenseNames.eachWithIndex { ln, li ->
+                        license {
+                            name ln
+                            url licenseUrls[li]
+                        }
+                    }
+                }
+                developers {
+                    developer {
+                        name username
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allGroovy
+    classifier = 'sources'
+}
+
+
+task javadocJar(type: Jar, dependsOn: groovydoc) {
+    from groovydoc.destinationDir
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+
+bintray {
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    user = properties.getProperty('BINTRAY_USER')
+    key = properties.getProperty('BINTRAY_KEY')
+
+    configurations = ['archives']
+    pkg {
+        repo = repositoryName
+        name = projectName
+        desc = projectDesc
+        websiteUrl = siteUrl
+        issueTrackerUrl = issueUrl
+        vcsUrl = gitUrl
+        labels = ['gradle', 'plugin', 'time']
+        licenses = licenseIds
+        publish = true
+        publicDownloadNumbers = true
+    }
+}

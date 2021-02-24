@@ -12,7 +12,7 @@ repositories {
 }
 
 group='com.gujun.plugin'
-version='1.0.0'
+version='1.0.4'
 
 uploadArchives {
     repositories {
@@ -21,3 +21,5 @@ uploadArchives {
         }
     }
 }
+
+apply from: '../bintray.gradle'

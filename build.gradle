@@ -19,6 +19,10 @@ buildscript {
         //本地插件,class path后面引号里的内容，就是上面grade中定义的group，version以及moduleName所共同决定的，和maven是一样的。
         //classpath '<group>:<moduleName>:<version>'
         classpath 'com.gujun.plugin:lib_plugin:1.0.0'
+
+        //配置jcenter
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     }
 }
 
