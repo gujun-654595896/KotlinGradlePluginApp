@@ -4,6 +4,11 @@ apply plugin: 'maven'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
+
+    //字节码插桩,Transform\ASM在此包下
+    implementation "com.android.tools.build:gradle:3.4.1"
+    //文件操作的工具类
+    implementation 'commons-io:commons-io:2.6'
 }
 
 //插件发布到本地的仓库
@@ -12,7 +17,7 @@ repositories {
 }
 
 group='com.gujun.plugin'
-version='1.0.6'
+version='1.0.7'
 
 uploadArchives {
     repositories {
